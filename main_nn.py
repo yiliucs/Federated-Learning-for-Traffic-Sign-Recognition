@@ -62,9 +62,9 @@ if __name__ == '__main__':
     # parse args
     args = args_parser()
     args.device = torch.device('cuda:{}'.format(args.gpu) if torch.cuda.is_available() and args.gpu != -1 else 'cpu')
-    #parser.add_argument('--outf', default='./save/', help='folder to output images and model checkpoints')  # 模型保存路径
-    #parser.add_argument('--net', default='./save/net.pth', help="path to netG (to continue training)")  # 模型加载路径
-    #opt = parser.parse_args()  # 解析得到你在路径中输入的参数，比如 --outf 后的"model"或者 --net 后的"model/net_005.pth"，是作为字符串形式保存的
+    #parser.add_argument('--outf', default='./save/', help='folder to output images and model checkpoints')  # Model save path
+    #parser.add_argument('--net', default='./save/net.pth', help="path to netG (to continue training)")  # Model loading path
+    #opt = parser.parse_args()  # Save model as string
 
     # Load training and testing datasets.
     torch.manual_seed(args.seed)
@@ -86,21 +86,6 @@ if __name__ == '__main__':
     elif args.dataset == 'traffic':
         dataset_train, dataset_test = get_train_valid_loader('/home/liuyi/Documents/federated-learning-master/federated-learning-master/data',
                                                                          batch_size=32, num_workers=0)
-
-        # 定义训练数据集(此处是加载MNIST手写数据集)
-       # transform = transforms.Compose([
-        #    transforms.Resize((28, 28)),
-        #    transforms.CenterCrop(28),
-        #    transforms.ToTensor()])
-
-       # dataset_train = Traffic(
-       #     root=train_data_dir,  # 如果从本地加载数据集，对应的加载路径
-       #     train=True,  # 训练模型
-        #    download=True,  # 是否从网络下载训练数据集
-        #    transform=transform  # 数据的转换形式
-       # )
-
-        # 定义训练批处理数据
 
     else:
         exit('Error: unrecognized dataset')
@@ -125,11 +110,6 @@ if __name__ == '__main__':
     optimizer = optim.SGD(net_glob.parameters(), lr=args.lr, momentum=args.momentum)
     train_loader = torch.utils.data.DataLoader(
         dataset_train, batch_size=10, shuffle=True, num_workers=0)
-    #train_loader = DataLoader(
-    #    dataset_train,  # 加载测试集
-    #    batch_size=3,  # 最小批处理尺寸
-    #    shuffle=True,  # 标识进行数据迭代时候将数据打乱
-   # )
 
     list_loss = []
     net_glob.train()
@@ -178,24 +158,6 @@ if __name__ == '__main__':
             batch_size=32, num_workers=0)
         test_loader = torch.utils.data.DataLoader(
             dataset_test, batch_size=10, shuffle=False, num_workers=0)
-        # 定义测试数据集
-        #transform = transforms.Compose([
-        #    transforms.Resize((28, 28)),
-        #    transforms.CenterCrop(28),
-        #    transforms.ToTensor()])
-
-        #dataset_test = Traffic(
-         #   root=test_data_dir,  # 如果从本地加载数据集，对应的加载路径
-         #   train=True,  # 训练模型
-         #   download=True,  # 是否从网络下载训练数据集
-          #  transform=transform  # 数据的转换形式
-        #)
-        # 定义测试批处理数据
-        #test_loader = DataLoader(
-        #    dataset_test,  # 加载测试集
-        #    batch_size=10,  # 最小批处理尺寸
-         #   shuffle=False,  # 标识进行数据迭代时候不将数据打乱
-        #)
     else:
         exit('Error: unrecognized dataset')
 
